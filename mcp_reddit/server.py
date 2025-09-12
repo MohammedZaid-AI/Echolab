@@ -1,4 +1,4 @@
-from mcp.server import FastMCP, stdio
+from mcp.server import FastMCP
 import praw
 import os
 from dotenv import load_dotenv
@@ -8,23 +8,22 @@ load_dotenv()
 reddit = praw.Reddit(
     client_id=os.getenv("REDDIT_CLIENT_ID"),
     client_secret=os.getenv("REDDIT_CLIENT_SECRET"),
-    username=os.getenv("REDDIT_USERNAME"),
-    password=os.getenv("REDDIT_PASSWORD"),
     user_agent=os.getenv("USER_AGENT", "echolab-mcp-reddit/0.1")
 )
+
 mcp=FastMCP("Reddit")
 
 @mcp.tool()
-def fetch_reddit_posts_with_comments(subreddit="all", limit=5, comments_per_post=15):
+def fetch_reddit_posts_with_comments(subreddit="all", limit="5", comments_per_post="15"):
     """
     Fetch hot posts and top comments from a subreddit.
-    :param subreddit: subreddit name (default: all)
-    :param limit: number of posts
-    :param comments_per_post: number of comments to fetch per post
-    :return: list of dicts with post + comments
     """
-    posts_data = []
     try:
+        # Convert string inputs to int
+        limit = int(limit)
+        comments_per_post = int(comments_per_post)
+
+        posts_data = []
         sub = reddit.subreddit(subreddit)
         submissions = sub.hot(limit=limit)
 
@@ -34,27 +33,29 @@ def fetch_reddit_posts_with_comments(subreddit="all", limit=5, comments_per_post
                 "title": post.title,
                 "author": str(post.author) if post.author else "deleted",
                 "url": f"https://reddit.com{post.permalink}",
-                "score": post.score,
-                "num_comments": post.num_comments,
-                "created_utc": post.created_utc,
+                "score": int(post.score),
+                "num_comments": int(post.num_comments),
+                "created_utc": float(post.created_utc),
                 "comments": []
             }
 
-            post.comments.replace_more(limit=0)  # flatten "load more"
+            post.comments.replace_more(limit=0)
             for comment in post.comments[:comments_per_post]:
                 post_info["comments"].append({
                     "author": str(comment.author) if comment.author else "deleted",
-                    "body": comment.body if comment.body else "",
-                    "score": comment.score
+                    "body": comment.body or "",
+                    "score": int(comment.score)
                 })
 
             posts_data.append(post_info)
 
-    except Exception as e:
-        print(f"Error fetching from r/{subreddit}: {e}")
+        # Always return something structured
+        return {"posts": posts_data}
 
-    return posts_data
+    except Exception as e:
+        return {"error": str(e), "posts": []}
+
 
 
 if __name__ == "__main__":
-    mcp.run(transport=stdio)
+    mcp.run(transport="stdio")

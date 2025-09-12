@@ -1,0 +1,8 @@
+# Ignore config file if it has secrets
+config.json
+
+# Ignore main folder env
+.env
+
+# Ignore Reddit server env
+/mcp_reddit/.env

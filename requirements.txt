@@ -2,3 +2,5 @@ langchain-mcp-adapters
 mcp
 langgraph
 langchain_google_genai
+praw
+mcp_use
