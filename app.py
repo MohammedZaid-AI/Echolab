@@ -33,7 +33,7 @@ async def main():
         system_prompt=SYSTEM_PROMPT
         )
 
-    reddit_response =await agent.run("Fetch 5 posts from r/SaaS")
+    reddit_response =await agent.run("Fetch 5 posts from r/SaaS and include top 10 comments for each post")
     pprint.pprint(reddit_response)
 
 if __name__ == "__main__":
