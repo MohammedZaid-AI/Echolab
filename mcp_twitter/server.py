@@ -21,3 +21,6 @@ if __name__ == "__main__":
     tweet_id = "1234567890123456789"
     replies = get_replies(tweet_id)
     print(replies)
+
+if __name__ == "__main__":
+    mcp.run(transport="stdio")
