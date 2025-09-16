@@ -33,8 +33,8 @@ async def main():
         system_prompt=SYSTEM_PROMPT
         )
 
-    reddit_response =await agent.run("Fetch 5 recent posts from r/SaaS. For each post, include only the top 10 comments that describe problems, struggles, or challenges (e.g., issues with pricing, scaling, growth, customer retention, marketing, or technical difficulties). Ignore generic, positive, or promotional comments. Return only the problem-focused comments along with the post title and URL")
-    pprint.pprint(reddit_response)
+    # reddit_response =await agent.run("Fetch 5 recent posts from r/SaaS. For each post, include only the top 10 comments that describe problems, struggles, or challenges (e.g., issues with pricing, scaling, growth, customer retention, marketing, or technical difficulties). Ignore generic, positive, or promotional comments. Return only the problem-focused comments along with the post title and URL")
+    # pprint.pprint(reddit_response)
 
     twitter_response=await agent.run("Fetch 5 recent tweets from @OpenAI. For each tweet, include only the top 10 comments that describe problems, struggles, or challenges (e.g., issues with pricing, scaling, growth, customer retention, marketing, or technical difficulties). Ignore generic, positive, or promotional comments. Return only the problem-focused comments along with the tweet text and URL")
     pprint.pprint(twitter_response)
