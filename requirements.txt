@@ -5,3 +5,4 @@ langchain_google_genai
 praw
 mcp_use
 requests
+snscrape
