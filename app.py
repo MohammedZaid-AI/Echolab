@@ -36,7 +36,7 @@ async def main():
     # reddit_response =await agent.run("Fetch 5 recent posts from r/SaaS. For each post, include only the top 10 comments that describe problems, struggles, or challenges (e.g., issues with pricing, scaling, growth, customer retention, marketing, or technical difficulties). Ignore generic, positive, or promotional comments. Return only the problem-focused comments along with the post title and URL")
     # pprint.pprint(reddit_response)
 
-    twitter_response=await agent.run("Fetch 5 tweets from the hashtag #buildinpublic with problem-focused comments and include the username of the tweeter even ")
+    twitter_response=await agent.run("Fetch 20  tweets from the hashtag #buildinpublic and its top 10 replies ")
     pprint.pprint(twitter_response)
 
 if __name__ == "__main__":
