@@ -6,3 +6,5 @@ config.json
 
 # Ignore Reddit server env
 /mcp_reddit/.env
+
+cookie.json
