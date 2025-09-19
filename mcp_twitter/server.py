@@ -88,14 +88,24 @@ async def get_user_tweets(username: str, tweet_type: str = "Tweets", count: int 
 
 @mcp.tool()
 async def get_replies_for_tweet(tweet_id: str, count: int = 30) -> List[dict]:
-    """Get replies for a specific tweet."""
+    """Get replies for a specific tweet using Twikit's get_tweet_detail()."""
     try:
         client = await get_twitter_client()
-        replies = await client.get_tweet_replies(tweet_id, count=count)  # twikit has this method
+        
+        # Get tweet details (this includes replies)
+        tweet_detail = await client.get_tweet_detail(tweet_id)
+        
+        if not tweet_detail or not hasattr(tweet_detail, "replies"):
+            return [{"error": f"No replies found for tweet {tweet_id}"}]
+        
+        # Slice only the top N replies
+        replies = tweet_detail.replies[:count]
+        
         return [get_tweet_data(reply) for reply in replies]
     except Exception as e:
         logger.error(f"Error fetching replies for tweet {tweet_id}: {e}")
         return [{"error": f"Error fetching replies: {e}"}]
+
 
 
 if __name__ == "__main__":
