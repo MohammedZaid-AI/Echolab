@@ -1,5 +1,4 @@
 from mcp.server.fastmcp import FastMCP
-from mcp_twitter.twitter_tools import get_tweets, get_replies_for_tweet
 
 mcp=FastMCP()
 

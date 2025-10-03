@@ -7,3 +7,4 @@ mcp_use
 requests
 twikit
 tweepy
+wikipedia
