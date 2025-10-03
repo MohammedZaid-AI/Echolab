@@ -3,7 +3,6 @@ import pprint
 import os
 from langchain_google_genai import ChatGoogleGenerativeAI
 from mcp_use import MCPClient,MCPAgent
-from mcp_twitter.twitter_tools import get_tweets, get_replies_for_tweet
 
 
 from dotenv import load_dotenv
@@ -40,7 +39,9 @@ async def main():
 
     tweets = await agent.run("get_tweets('#buildinpublic', 10)")
     pprint.pprint(tweets)
-
+   
+    wiki_response = await agent.run("search('OpenAI')")
+    pprint.pprint(wiki_response)   
 
 if __name__ == "__main__":
     import asyncio
