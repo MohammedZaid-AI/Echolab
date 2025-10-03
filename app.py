@@ -3,6 +3,8 @@ import pprint
 import os
 from langchain_google_genai import ChatGoogleGenerativeAI
 from mcp_use import MCPClient,MCPAgent
+from mcp_twitter.twitter_tools import get_tweets, get_replies_for_tweet
+
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -36,8 +38,8 @@ async def main():
     # reddit_response =await agent.run("Fetch 5 recent posts from r/SaaS. For each post, include only the top 10 comments that describe problems, struggles, or challenges (e.g., issues with pricing, scaling, growth, customer retention, marketing, or technical difficulties). Ignore generic, positive, or promotional comments. Return only the problem-focused comments along with the post title and URL")
     # pprint.pprint(reddit_response)
 
-    twitter_response=await agent.run("Fetch 20 tweets from the hashtag #buildinpublic that are problem-style posts (tweets asking for help, reporting errors, or describing issues — e.g., containing words like “error”, “bug”, “issue”, “stuck”, “how to”, “why”, “any idea”). For each of these tweets, fetch its top 10 replies. ")
-    pprint.pprint(twitter_response)
+    tweets = await agent.run("get_tweets('#buildinpublic', 10)")
+    pprint.pprint(tweets)
 
 
 if __name__ == "__main__":

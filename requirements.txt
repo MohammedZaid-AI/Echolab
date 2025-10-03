@@ -6,3 +6,4 @@ praw
 mcp_use
 requests
 twikit
+tweepy
