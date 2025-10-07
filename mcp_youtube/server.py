@@ -1,6 +1,8 @@
 from mcp.server import FastMCP
 from googleapiclient.discovery import build
 from youtube_transcript_api import YouTubeTranscriptApi
+from dotenv import load_dotenv
+load_dotenv()
 import os
 mcp = FastMCP("YouTube MCP Server")
 
@@ -67,4 +69,6 @@ def fetch_youtube_videos(query: str, count: int = 5):
 
 
 if __name__ == "__main__":
+    print("YouTube MCP Server is running...")
     mcp.run(transport="stdio")
+
