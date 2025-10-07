@@ -8,3 +8,7 @@ requests
 twikit
 tweepy
 wikipedia
+google-api-python-client
+youtube-transcript-api
+transformers
+

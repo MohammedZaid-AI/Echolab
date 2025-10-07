@@ -40,6 +40,9 @@ async def main():
     tweets = await agent.run("get_tweets('#buildinpublic', 10)")
     pprint.pprint(tweets)
    
+    youtube_response = await agent.run("fetch_youtube_videos('OpenAI')")
+    pprint.pprint(youtube_response)
+    
     wiki_response = await agent.run("search('OpenAI')")
     pprint.pprint(wiki_response)   
 
