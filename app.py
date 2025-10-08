@@ -34,17 +34,21 @@ async def main():
         system_prompt=SYSTEM_PROMPT
         )
 
-    reddit_response =await agent.run("Fetch 5 recent posts from r/SaaS. For each post, include only the top 10 comments that describe problems, struggles, or challenges (e.g., issues with pricing, scaling, growth, customer retention, marketing, or technical difficulties). Ignore generic, positive, or promotional comments. Return only the problem-focused comments along with the post title and URL")
-    pprint.pprint(reddit_response)
+    # reddit_response =await agent.run("Fetch 5 recent posts from r/SaaS. For each post, include only the top 10 comments that describe problems, struggles, or challenges (e.g., issues with pricing, scaling, growth, customer retention, marketing, or technical difficulties). Ignore generic, positive, or promotional comments. Return only the problem-focused comments along with the post title and URL")
+    # pprint.pprint(reddit_response)
 
-    tweets = await agent.run("get_tweets('#buildinpublic', 10)")
-    pprint.pprint(tweets)
+    # tweets = await agent.run("get_tweets('#buildinpublic', 10)")
+    # pprint.pprint(tweets)
    
-    youtube_response = await agent.run("fetch_youtube_videos('krish naik vids about langchain')")
-    pprint.pprint(youtube_response)
+    # youtube_response = await agent.run("fetch_youtube_videos('krish naik vids about langchain')")
+    # pprint.pprint(youtube_response)
     
-    wiki_response = await agent.run("search('OpenAI')")
-    pprint.pprint(wiki_response)   
+    # wiki_response = await agent.run("search('OpenAI')")
+    # pprint.pprint(wiki_response)   
+
+    google_results = await agent.run("Search latest AI funding rounds in 2025 using Google Search MCP.")
+    pprint.pprint(google_results)
+
 
 if __name__ == "__main__":
     import asyncio
