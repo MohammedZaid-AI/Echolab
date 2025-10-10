@@ -48,8 +48,6 @@ async def main():
 
     google_results = await agent.run("Search latest AI funding rounds in 2025 using Google Search MCP.")
     pprint.pprint(google_results)
-
-
 if __name__ == "__main__":
     import asyncio
     asyncio.run(main())

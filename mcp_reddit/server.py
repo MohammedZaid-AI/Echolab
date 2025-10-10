@@ -58,4 +58,5 @@ def fetch_reddit_posts_with_comments(subreddit="all", limit="5", comments_per_po
 
 
 if __name__ == "__main__":
+    print("Reddit MCP Server is running...")
     mcp.run(transport="stdio")

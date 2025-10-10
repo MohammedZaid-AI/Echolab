@@ -14,4 +14,5 @@ async def fetch_replies(tweet_id: str, count: int = 20):
 
 
 if __name__ == "__main__":
+    print("Twitter MCP Server is running...")
     mcp.run(transport="stdio")

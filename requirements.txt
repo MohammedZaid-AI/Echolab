@@ -3,7 +3,6 @@ mcp
 langgraph
 langchain_google_genai
 praw
-mcp_use
 requests
 twikit
 tweepy
