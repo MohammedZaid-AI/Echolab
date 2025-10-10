@@ -48,6 +48,10 @@ async def main():
 
     google_results = await agent.run("Search latest AI funding rounds in 2025 using Google Search MCP.")
     pprint.pprint(google_results)
+    
+    medium_results = await agent.run("Search latest articles on AI in 2025 using Medium Search MCP.")
+    pprint.pprint(medium_results)
+
 if __name__ == "__main__":
     import asyncio
     asyncio.run(main())
