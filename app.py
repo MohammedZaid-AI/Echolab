@@ -1,62 +1,144 @@
 import asyncio
-import pprint
 import os
-from langchain_groq import ChatGroq
-from mcp_use import MCPClient,MCPAgent
-from my_random import get_random_user_display
 import streamlit as st
-
 from dotenv import load_dotenv
-load_dotenv()
-groq_api_key=os.environ["GROQ_API_KEY"]=os.getenv("GROQ_API_KEY")
+from langchain_groq import ChatGroq
+from langchain_core.prompts import ChatPromptTemplate
+from mcp_use import MCPClient
+from my_random import get_random_user_display
 
-SYSTEM_PROMPT = """
-You are a professional research assistant.
-- Always use the MCP tools available to fetch data.
-- After fetching, stop reasoning and return results.
-- Do not continue thinking or looping after tool output is retrieved.
+
+load_dotenv()
+os.environ["GROQ_API_KEY"] = os.getenv("GROQ_API_KEY")
+
+
+llm = ChatGroq(
+    model="llama-3.1-8b-instant",
+    temperature=0
+)
+
+
+final_prompt = ChatPromptTemplate.from_messages([
+    (
+            "system",
+            """
+            You are HatchUp Chat, an elite startup research assistant.
+
+            Your task:
+            - Combine information from multiple real-world sources
+            - Remove duplicates and noise
+            - Produce ONE clear, structured answer
+            - Do NOT greet the user
+            - Do NOT explain tool usage
+
+            Structure the answer into:
+            • Key insights
+            • Market signals
+            • Opportunities
+            • Risks (if any)
+            """
+    ),
+    (
+                    "human",
+                    """
+                    Context:
+                    {context}
+
+                    User question:
+                    {question}
+
+                    Final answer:
+                    """
+    )
+])
+
+
+client = MCPClient.from_config_file("config.json")
+
+
+
+async def run_searches(query: str):
+    if "mcp_sessions" not in st.session_state:
+        st.session_state.mcp_sessions = await client.create_all_sessions()
+
+    sessions = st.session_state.mcp_sessions
+
+    def fail(name, e):
+        return f"[{name} MCP failed: {str(e)}]"
+
+    try:
+        reddit = await sessions["@echolab/mcp-reddit"].call(
+            "query", {"q": query}
+        )
+    except Exception as e:
+        reddit = fail("Reddit", e)
+
+    try:
+        wiki = await sessions["@echolab/mcp-wikipedia"].call(
+            "search", {"query": query}
+        )
+    except Exception as e:
+        wiki = fail("Wikipedia", e)
+
+    try:
+        google = await sessions["@echolab/mcp-google"].call(
+            "search", {"query": query}
+        )
+    except Exception as e:
+        google = fail("Google", e)
+
+    try:
+        medium = await sessions["@echolab/mcp-medium"].call(
+            "search", {"query": query}
+        )
+    except Exception as e:
+        medium = fail("Medium", e)
+
+    return {"reddit": reddit, "wiki": wiki, "google": google, "medium": medium}
+
+
+
+
+def build_context(results):
+    """
+    Combine raw MCP outputs into a single context string.
+    """
+    return f"""
+                [Reddit]
+                {results["reddit"]}
+
+                [Wikipedia]
+                {results["wiki"]}
+
+                [Google]
+                {results["google"]}
+
+                [Medium]
+                {results["medium"]}
 """
 
+
 async def main():
-    """
-    Main function to run the MCP agent.
+    st.title("HatchUp Chat")
+    st.write(get_random_user_display())
 
-    """
-    
-    llm = ChatGroq(
-        model="llama-3.1-70b-versatile",
-        temperature=0
-    )
+    user_query = st.text_input("Enter your query:")
 
-    
+    if st.button("Submit") and user_query:
+        with st.spinner("Researching using live sources..."):
+            results = await run_searches(user_query)
 
-    config_file="config.json"
-    client=MCPClient.from_config_file(config_file)
-    agent=MCPAgent(
-        client=client,
-        llm=llm,
-        memory_enabled=True,
-        max_steps=20,
-        system_prompt=SYSTEM_PROMPT
-        )
+            combined_context = build_context(results)
 
-    st.write(get_random_user_display()) 
+            messages = final_prompt.format_messages(
+                context=combined_context,
+                question=user_query
+            )
 
-    user_query=st.text_input("Enter your query:")
-    button=st.button("Submit")
-    if button:
-        reddit_response =await agent.run(user_query)
-        pprint.pprint(reddit_response)
-        
-        wiki_response = await agent.run(user_query)
-        pprint.pprint(wiki_response)   
+            final_answer = llm.invoke(messages).content
 
-        google_results = await agent.run(user_query)
-        pprint.pprint(google_results)
-        
-        medium_results = await agent.run(user_query)
-        pprint.pprint(medium_results)
+            st.markdown("### Answer")
+            st.write(final_answer)
 
 if __name__ == "__main__":
-    import asyncio
     asyncio.run(main())
