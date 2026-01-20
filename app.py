@@ -22,6 +22,11 @@ async def main():
     Main function to run the MCP agent.
 
     """
+    
+    llm = ChatGroq(
+        model="llama-3.1-70b-versatile",
+        temperature=0
+    )
 
     
 
