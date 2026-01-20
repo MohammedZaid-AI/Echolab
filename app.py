@@ -1,13 +1,14 @@
 import asyncio
 import pprint
 import os
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_groq import ChatGroq
 from mcp_use import MCPClient,MCPAgent
-from random import choice
+from my_random import get_random_user_display
+import streamlit as st
 
 from dotenv import load_dotenv
 load_dotenv()
-os.environ["GOOGLE_API_KEY"]=os.getenv("GOOGLE_API_KEY")
+groq_api_key=os.environ["GROQ_API_KEY"]=os.getenv("GROQ_API_KEY")
 
 SYSTEM_PROMPT = """
 You are a professional research assistant.
@@ -19,8 +20,8 @@ You are a professional research assistant.
 async def main():
     """
     Main function to run the MCP agent.
+
     """
-    llm=ChatGoogleGenerativeAI(model="gemini-2.5-pro")
 
     
 
@@ -34,25 +35,22 @@ async def main():
         system_prompt=SYSTEM_PROMPT
         )
 
-    user_query=input(choice(user_display_list))
+    st.write(get_random_user_display()) 
 
-    reddit_response =await agent.run(user_query)
-    pprint.pprint(reddit_response)
+    user_query=st.text_input("Enter your query:")
+    button=st.button("Submit")
+    if button:
+        reddit_response =await agent.run(user_query)
+        pprint.pprint(reddit_response)
+        
+        wiki_response = await agent.run(user_query)
+        pprint.pprint(wiki_response)   
 
-    tweets = await agent.run(user_query)
-    pprint.pprint(tweets)
-   
-    youtube_response = await agent.run(user_query)
-    pprint.pprint(youtube_response)
-    
-    wiki_response = await agent.run(user_query)
-    pprint.pprint(wiki_response)   
-
-    google_results = await agent.run(user_query)
-    pprint.pprint(google_results)
-    
-    medium_results = await agent.run(user_query)
-    pprint.pprint(medium_results)
+        google_results = await agent.run(user_query)
+        pprint.pprint(google_results)
+        
+        medium_results = await agent.run(user_query)
+        pprint.pprint(medium_results)
 
 if __name__ == "__main__":
     import asyncio

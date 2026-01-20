@@ -4,10 +4,10 @@ langgraph
 langchain_google_genai
 praw
 requests
-twikit
-tweepy
 wikipedia
 google-api-python-client
-youtube-transcript-api
 transformers
-
+streamlit
+langchain_community
+mcp_use
+langchain_groq
